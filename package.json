@@ -2,16 +2,26 @@
   "name": "coverage-slackify",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/cli.js",
+  "bin": "dist/cli.js",
+  "files": [
+    "lib",
+    "README.md"
+  ],
   "scripts": {
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && node dist/cli.js",
     "start:dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "slack",
+    "jest",
+    "coverage",
+    "istanbul"
+  ],
+  "author": "Harry Isidore",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.12.7",
     "nodemon": "^3.1.0",
