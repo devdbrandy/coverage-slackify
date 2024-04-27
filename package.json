@@ -14,6 +14,10 @@
     "start:dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devdbrandy/coverage-slackify.git"
+  },
   "keywords": [
     "slack",
     "jest",
