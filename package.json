@@ -1,16 +1,16 @@
 {
   "name": "coverage-slackify",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "",
-  "main": "dist/cli.js",
-  "bin": "dist/cli.js",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
   "files": [
-    "lib",
+    "src",
     "README.md"
   ],
   "scripts": {
-    "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/cli.js",
+    "build": "rimraf dist && tsc",
+    "start": "npm run build && node dist/index.js",
     "start:dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,10 +27,16 @@
   "author": "Harry Isidore",
   "license": "MIT",
   "devDependencies": {
+    "@types/istanbul": "^0.4.34",
     "@types/node": "^20.12.7",
     "nodemon": "^3.1.0",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "istanbul": "^0.4.5",
+    "slack-notify": "^2.0.7"
   }
 }
