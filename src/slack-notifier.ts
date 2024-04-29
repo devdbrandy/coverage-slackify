@@ -14,7 +14,7 @@ export class SlackNotifier {
     }
 
     this.config = {
-      threshold: {
+      thresholdOpts: {
         pass: { text: 'passed', color: '#36a64f', icon: ':thumbsup:' },
         fail: { text: 'failed', color: '#dc5547', icon: ':thumbsdown:' },
       },
@@ -23,7 +23,7 @@ export class SlackNotifier {
   }
 
   getThresholdConfig(status: StatusType) {
-    return this.config.threshold[status];
+    return this.config.thresholdOpts[status];
   }
 
   buildCoverageBlock(coverage: Coverage) {

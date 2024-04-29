@@ -1,40 +1,21 @@
-import fs from 'fs';
+import * as fs from 'fs';
+import { CliOption } from './cli-options';
+import { CoverageOptions } from './types/config.type';
 import { Coverage, CoverageSummary } from './types/coverage.type';
 
-type Config = {
-  rootDir: string;
-  threshold: number;
-  coverageFiles: string[];
-  coverageSummaryFile: string;
-};
-
 export class CoverageParser {
-  private config: Config;
+  private cliOption: CliOption;
 
-  constructor(config?: Config) {
-    this.config = config || {
-      rootDir: '.',
-      threshold: 80,
-      coverageFiles: ['coverage/coverage-final.json'],
-      coverageSummaryFile: 'coverage/coverage-summary.json',
-    };
-    this.sanitizeThreshold(this.config.threshold);
+  constructor(option: CliOption) {
+    this.cliOption = option;
+  }
 
-    if (this.config.coverageFiles.length === 0) {
-      throw new Error('Require at least one coverage istanbul file');
-    }
+  get coverageOpts(): CoverageOptions {
+    return this.cliOption.coverage;
   }
 
   get coverageFiles(): string[] {
-    return this.config.coverageFiles;
-  }
-
-  private sanitizeThreshold(threshold: number) {
-    if (threshold > 100) {
-      this.config.threshold = 100;
-    } else if (threshold < 0) {
-      this.config.threshold = 0;
-    }
+    return this.coverageOpts.coverageFiles;
   }
 
   async processSummary(): Promise<Coverage> {
@@ -44,22 +25,23 @@ export class CoverageParser {
       functions: totalSummary.functions.pct,
       lines: totalSummary.lines.pct,
       statements: totalSummary.statements.pct,
-      threshold: this.config.threshold,
+      threshold: this.coverageOpts.threshold,
     };
 
     coverage.coveragePercentage = this.calcCoveragePercentage(coverage);
-    coverage.success = this.config.threshold <= coverage.coveragePercentage;
+    coverage.success =
+      this.coverageOpts.threshold <= coverage.coveragePercentage;
     return coverage;
   }
 
   async readCoverageSummary(): Promise<CoverageSummary> {
-    const coverageSummary = `${this.config.rootDir}/${this.config.coverageSummaryFile}`;
+    const coverageSummary = `${this.coverageOpts.rootDir}/${this.coverageOpts.coverageSummaryFile}`;
     return new Promise((resolve, reject) => {
-      fs.readFile(coverageSummary, 'utf-8', (err, data) => {
+      fs.readFile(coverageSummary, 'utf8', (err, data) => {
         if (err) {
           reject(
             new Error(
-              `Error processing file: ${this.config.coverageSummaryFile}`
+              `Error processing file: ${this.coverageOpts.coverageSummaryFile}`
             )
           );
         }
