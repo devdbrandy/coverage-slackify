@@ -1,6 +1,8 @@
 export interface OptionsType {
-  projectName: string;
+  projectName: string | undefined;
   coverage: CoverageOptions;
+  slack: SlackOptions;
+  useTextNotify: boolean;
 }
 
 export type CoverageOptions = {
@@ -8,4 +10,8 @@ export type CoverageOptions = {
   threshold: number;
   coverageFiles: string[];
   coverageSummaryFile: string;
+};
+
+export type SlackOptions = {
+  webhook: string | undefined;
 };

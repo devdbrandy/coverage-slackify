@@ -4,7 +4,7 @@ import { CoverageOptions } from './types/config.type';
 import { Coverage, CoverageSummary } from './types/coverage.type';
 
 export class CoverageParser {
-  private cliOption: CliOption;
+  private readonly cliOption: CliOption;
 
   constructor(option: CliOption) {
     this.cliOption = option;

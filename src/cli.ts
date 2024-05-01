@@ -5,35 +5,33 @@ import { IstanbulReport } from './istanbul-report';
 import { SlackNotifier } from './slack-notifier';
 import { TextNotifier } from './text-notifier';
 import { ReportDto } from './types/report-dto.type';
+import { readPackageJson } from './utils/helpers.util';
 
 export class CoverageSlackifyCli {
   async execute() {
     try {
-      const option = new CliOption();
+      const packageJson = readPackageJson();
+      const option = new CliOption(packageJson);
+
       const istanbulReporter = new IstanbulReport(option.coverage);
       await istanbulReporter.generateSummary();
 
       const coverageParser = new CoverageParser(option);
       const coverageSummary = await coverageParser.processSummary();
 
-      /**
-       * TODO:
-       * - Implement custom config via package.json
-       */
-
-      if (!process.env.SLACK_WEBHOOK) {
+      if (option.useTextNotify) {
         const notifier = new TextNotifier();
         notifier.printCoverage(coverageSummary);
       } else {
         const gitInfo = new GitInfo();
         const commitInfo = await gitInfo.commitInfo();
+
         const reportDto: ReportDto = {
-          projectName: 'coverage-slackify',
+          projectName: option.projectName,
           coverage: coverageSummary,
           commitInfo,
         };
-        const slackWebhook = process.env.SLACK_WEBHOOK;
-        const notifier = new SlackNotifier(slackWebhook);
+        const notifier = new SlackNotifier(option.slack.webhook);
         const textPayload = notifier.buildCoverageBlock(reportDto);
 
         await notifier.sendNotification(textPayload);

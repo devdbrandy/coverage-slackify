@@ -3,9 +3,9 @@ import * as fs from 'fs';
 import { CoverageOptions } from './types/config.type';
 
 export class IstanbulReport {
-  collector: istanbul.Collector;
-  reporter: istanbul.Reporter;
-  opts: CoverageOptions;
+  private readonly collector: istanbul.Collector;
+  private readonly reporter: istanbul.Reporter;
+  private readonly opts: CoverageOptions;
 
   constructor(options: CoverageOptions) {
     this.opts = options;
