@@ -24,7 +24,8 @@ export class CoverageSlackifyCli {
         notifier.printCoverage(coverageSummary);
       } else {
         const gitInfo = new GitInfo();
-        const commitInfo = await gitInfo.commitInfo();
+        const isGitInit = await gitInfo.verifyGit();
+        const commitInfo = isGitInit ? await gitInfo.commitInfo() : null;
 
         const reportDto: ReportDto = {
           projectName: option.projectName,

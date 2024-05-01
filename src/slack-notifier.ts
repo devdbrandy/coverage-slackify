@@ -1,4 +1,5 @@
 import SlackNotify, { SlackNotify as SlackNotifyClient } from 'slack-notify';
+import { CommitInfo } from './types/git-info.type';
 
 import { ReportDto } from './types/report-dto.type';
 import { SlackNotifierConfig } from './types/slack.type';
@@ -35,7 +36,6 @@ export class SlackNotifier {
     const threshold = coverage.success
       ? this.getThresholdConfig('pass')
       : this.getThresholdConfig('fail');
-    const commitRef = commitInfo.refs[1] || commitInfo.refs[0];
 
     const payload = {
       attachments: [
@@ -75,15 +75,25 @@ export class SlackNotifier {
               short: true,
             },
           ],
-          footer: `Added by Coverage Slackify • ${commitInfo.author} committed ${commitInfo.shortRevision} ${commitRef}`,
+          footer: this.getFooter(commitInfo),
           footer_icon:
             'https://emoji.slack-edge.com/T071CEN0CCR/robo/6fac99bd09670ff4.png',
-          ts: commitInfo.date,
+          ts: commitInfo?.date,
         },
       ],
     };
 
     return payload;
+  }
+
+  private getFooter(commitInfo: CommitInfo | null) {
+    const caption = 'Added by Coverage Slackify';
+    if (!commitInfo) {
+      return caption;
+    }
+
+    const commitRef = commitInfo?.refs[1] || commitInfo?.refs[0];
+    return `${caption} • ${commitInfo.author} committed ${commitInfo.shortRevision} ${commitRef}`;
   }
 
   async sendNotification(payload: any) {
