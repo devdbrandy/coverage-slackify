@@ -41,6 +41,9 @@ export class CoverageSlackifyCli {
     } catch (error: any) {
       console.error('Error executing coverage slack notification:');
       console.error('Error Message:', error.message);
+      if (error.stderr) {
+        console.error('stderr:', error.stderr);
+      }
       process.exit(1);
     }
   }
