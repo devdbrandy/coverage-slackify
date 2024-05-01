@@ -13,7 +13,7 @@ import {
 } from './utils/color.util';
 
 export class TextNotifier {
-  private emojis: StatusEmojis;
+  private readonly emojis: StatusEmojis;
 
   constructor() {
     this.emojis = emojis;

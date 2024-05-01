@@ -1,28 +1,51 @@
-import { OptionsType, CoverageOptions } from './types/config.type';
+import {
+  OptionsType,
+  CoverageOptions,
+  SlackOptions,
+  PackageJsonSchema,
+} from './types/config.type';
 
 export class CliOption {
-  opts: OptionsType;
+  private readonly opts: OptionsType;
 
-  constructor(options?: OptionsType) {
-    this.opts = options || this.defaultOptions;
+  constructor(options: PackageJsonSchema) {
+    this.opts = Object.assign(this.defaultOpts, {});
+    this.sanitizeConfig(options);
+  }
+
+  private get defaultOpts(): OptionsType {
+    return {
+      projectName: process.env.npm_package_name,
+      coverage: {
+        rootDir: '.',
+        coverageFiles: ['coverage/coverage-final.json'],
+        coverageSummaryFile: 'coverage/coverage-summary.json',
+        threshold: 100,
+      },
+      slack: {
+        webhook: process.env.SLACK_WEBHOOK,
+      },
+      useTextNotify: !process.env.SLACK_WEBHOOK,
+    };
+  }
+
+  sanitizeConfig(packageConfig: PackageJsonSchema) {
+    this.opts.coverage.threshold =
+      packageConfig?.coverageSlackify?.threshold ||
+      this.defaultOpts?.coverage?.threshold;
+    this.opts.coverage.coverageFiles =
+      packageConfig?.coverageSlackify?.coverageFiles ||
+      this.defaultOpts?.coverage?.coverageFiles;
+    this.opts.projectName =
+      packageConfig?.coverageSlackify?.projectName ||
+      this.defaultOpts?.projectName ||
+      packageConfig?.name;
 
     this.sanitizeThreshold(this.opts.coverage.threshold);
 
     if (this.opts.coverage.coverageFiles.length === 0) {
       throw new Error('Require at least one coverage istanbul file');
     }
-  }
-
-  private get defaultOptions(): OptionsType {
-    return {
-      projectName: '',
-      coverage: {
-        rootDir: '.',
-        threshold: 80,
-        coverageFiles: ['coverage/coverage-final.json'],
-        coverageSummaryFile: 'coverage/coverage-summary.json',
-      },
-    };
   }
 
   private sanitizeThreshold(threshold: number) {
@@ -33,7 +56,19 @@ export class CliOption {
     }
   }
 
+  get projectName(): string | undefined {
+    return this.opts.projectName;
+  }
+
   get coverage(): CoverageOptions {
     return this.opts.coverage;
+  }
+
+  get slack(): SlackOptions {
+    return this.opts.slack;
+  }
+
+  get useTextNotify(): boolean {
+    return this.opts.useTextNotify;
   }
 }

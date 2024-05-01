@@ -5,10 +5,10 @@ import { SlackNotifierConfig } from './types/slack.type';
 import { StatusType } from './types/status.type';
 
 export class SlackNotifier {
-  private client: SlackNotifyClient;
-  private config: SlackNotifierConfig;
+  private readonly client: SlackNotifyClient;
+  private readonly config: SlackNotifierConfig;
 
-  constructor(slackWebhookUrl: string) {
+  constructor(slackWebhookUrl: string | undefined) {
     if (!slackWebhookUrl) {
       throw new Error('Slack webhook url is required');
     }
