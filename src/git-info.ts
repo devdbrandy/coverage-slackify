@@ -4,13 +4,24 @@ import { CommitInfo } from './types/git-info.type';
 const LOG_SEPARATOR = '§§';
 
 export class GitInfo {
+  verifyGit(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      exec('git --version || true', (err, stdout) => {
+        if (err) {
+          reject(false);
+          return;
+        }
+
+        resolve(!!stdout);
+      });
+    });
+  }
+
   commitInfo(): Promise<CommitInfo> {
     return new Promise((resolve, reject) => {
-      exec(this.logInfoCommand(), (err, stdout, stderr) => {
+      exec(this.logInfoCommand(), (err, stdout) => {
         if (err) {
-          const error = new Error('Failed to retrieve Git log info');
-          err.stderr = stderr;
-          reject(error);
+          reject(new Error('Failed to retrieve Git log info'));
           return;
         }
 
