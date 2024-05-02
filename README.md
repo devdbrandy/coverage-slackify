@@ -6,10 +6,7 @@ Coverage-Slackify is a handy npm package designed to effortlessly integrate code
 
 <img src="docs/screenshots/coverage-slackify.png">
 
-## Table of Contents {ignore=true}
-<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=6 orderedList=true} -->
-
-<!-- code_chunk_output -->
+## Table of Contents
 
 1. [🚀 Features](#-features)
 2. [🔧 Installation](#-installation)
@@ -20,8 +17,6 @@ Coverage-Slackify is a handy npm package designed to effortlessly integrate code
 5. [🔧 Custom Configuration](#-custom-configuration)
 6. [🤝 Contributing](#-contributing)
 7. [📄 License](#-license)
-
-<!-- /code_chunk_output -->
 
 ---
 
