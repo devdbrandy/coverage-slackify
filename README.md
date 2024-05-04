@@ -1,8 +1,6 @@
 # Coverage Slackify
 
-Welcome to Coverage-Slackify! 🎉
-
-Coverage-Slackify is a handy npm package designed to effortlessly integrate code coverage summaries and build details into your Slack workflow. Whether you're using Istanbul or Jest for testing, this library simplifies the process of notifying your team about the health of your project's test coverage.
+The `coverage-slackify` package allows you to effortlessly integrate code coverage summaries and build details into your Slack workflow. It simplifies the process of notifying your team about the health of your project's test coverage.
 
 <img src="docs/screenshots/coverage-slackify.png">
 
@@ -30,7 +28,7 @@ Coverage-Slackify is a handy npm package designed to effortlessly integrate code
 
 ## 🔧 Installation
 
-You can install Coverage-Slackify via npm or yarn:
+You can install [coverage-slackify](https://www.npmjs.com/package/coverage-slackify) via npm or yarn:
 
 ```bash
 npm install --save-dev coverage-slackify
@@ -40,7 +38,7 @@ yarn add -D coverage-slackify
 
 ## 📋 Prerequisites
 
-Before using Coverage-Slackify, make sure you have the following:
+Before using [coverage-slackify](https://www.npmjs.com/package/coverage-slackify), make sure you have the following:
 
 - A Slack webhook URL from your Slack workspace.
 - Istanbul or Jest coverage report can be generated for your project.
@@ -49,19 +47,19 @@ Before using Coverage-Slackify, make sure you have the following:
 
 ### Via npm Task
 
-If you prefer using npm tasks, you can include Coverage-Slackify as part of your testing workflow:
+If you prefer using npm tasks, you can include [coverage-slackify](https://www.npmjs.com/package/coverage-slackify) as part of your testing workflow:
 
 ```json
 "scripts": {
   "test": "jest --coverage",
-  "test-ci": "npm test && coverage-slackify"
+  "test:ci": "npm test && coverage-slackify"
 }
 ```
 
 Then, you can run the task in your CI/CD pipeline:
 
 ```bash
-SLACK_WEBHOOK={$SLACK_WEBHOOK} npm run test-ci
+SLACK_WEBHOOK={$SLACK_WEBHOOK} npm run test:ci
 ```
 
 ### Defining SLACK_WEBHOOK Environment Variable
@@ -71,11 +69,11 @@ You can also define the Slack webhook directly as an environment variable:
 ```json
 "scripts": {
   "test": "jest --coverage",
-  "test-ci": "npm test && SLACK_WEBHOOK=https://hooks.slack.com/xxxxx coverage-slackify"
+  "test:ci": "npm test && SLACK_WEBHOOK=https://hooks.slack.com/xxxxx coverage-slackify"
 }
 ```
 
-**Note**: Be cautious about exposing your Slack webhook URL in public repositories.
+> **Note**: Be cautious about exposing your Slack webhook URL in public repositories.
 
 ## 🔧 Custom Configuration
 
@@ -99,4 +97,4 @@ Contributions are welcome! If you have any ideas, enhancements, or bug fixes, fe
 
 ## 📄 License
 
-Coverage-Slackify is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
