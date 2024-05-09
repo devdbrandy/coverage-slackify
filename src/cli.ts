@@ -6,20 +6,25 @@ import { SlackNotifier } from './slack-notifier';
 import { TextNotifier } from './text-notifier';
 import { ReportDto } from './types/report-dto.type';
 import { readPackageJson } from './utils/helpers.util';
+import * as colorUtil from './utils/color.util';
 
 export class CoverageSlackifyCli {
+  private opts: CliOption;
+
+  constructor() {
+    const packageJson = readPackageJson();
+    this.opts = new CliOption(packageJson);
+  }
+
   async execute() {
     try {
-      const packageJson = readPackageJson();
-      const option = new CliOption(packageJson);
-
-      const istanbulReporter = new IstanbulReport(option.coverage);
+      const istanbulReporter = new IstanbulReport(this.opts.coverage);
       await istanbulReporter.generateSummary();
 
-      const coverageParser = new CoverageParser(option);
+      const coverageParser = new CoverageParser(this.opts);
       const coverageSummary = await coverageParser.processSummary();
 
-      if (option.useTextNotify) {
+      if (this.opts.useTextNotify) {
         const notifier = new TextNotifier();
         notifier.printCoverage(coverageSummary);
       } else {
@@ -28,11 +33,11 @@ export class CoverageSlackifyCli {
         const commitInfo = isGitInit ? await gitInfo.commitInfo() : null;
 
         const reportDto: ReportDto = {
-          projectName: option.projectName,
+          projectName: this.opts.projectName,
           coverage: coverageSummary,
           commitInfo,
         };
-        const notifier = new SlackNotifier(option.slack.webhook);
+        const notifier = new SlackNotifier(this.opts.slack.webhook);
         const textPayload = notifier.buildCoverageBlock(reportDto);
 
         await notifier.sendNotification(textPayload);
@@ -40,11 +45,16 @@ export class CoverageSlackifyCli {
 
       process.exit(0);
     } catch (error: any) {
-      console.error('Error executing coverage slack notification:');
-      console.error('Error Message:', error.message);
+      console.error(
+        colorUtil.error(
+          '[coverage-slackify] Error executing coverage slack notify.'
+        ),
+        colorUtil.error(error?.message ?? '')
+      );
       if (error.stderr) {
-        console.error('stderr:', error.stderr);
+        console.error('[coverage-slackify] stderr:', error.stderr);
       }
+
       process.exit(1);
     }
   }
