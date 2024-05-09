@@ -59,7 +59,7 @@ If you prefer using npm tasks, you can include [coverage-slackify](https://www.n
 Then, you can run the task in your CI/CD pipeline:
 
 ```bash
-SLACK_WEBHOOK={$SLACK_WEBHOOK} npm run test:ci
+SLACK_WEBHOOK=$SLACK_WEBHOOK npm run test:ci
 ```
 
 ### Defining SLACK_WEBHOOK Environment Variable
