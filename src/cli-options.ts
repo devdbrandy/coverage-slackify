@@ -29,15 +29,16 @@ export class CliOption {
     };
   }
 
-  sanitizeConfig(packageConfig: PackageJsonSchema) {
+  private sanitizeConfig(packageConfig: PackageJsonSchema) {
+    const { coverageSlackify } = packageConfig;
+
     this.opts.coverage.threshold =
-      packageConfig?.coverageSlackify?.threshold ||
-      this.defaultOpts?.coverage?.threshold;
+      coverageSlackify?.threshold || this.defaultOpts.coverage.threshold;
     this.opts.coverage.coverageFiles =
-      packageConfig?.coverageSlackify?.coverageFiles ||
-      this.defaultOpts?.coverage?.coverageFiles;
+      coverageSlackify?.coverageFiles ||
+      this.defaultOpts.coverage.coverageFiles;
     this.opts.projectName =
-      packageConfig?.coverageSlackify?.projectName ||
+      coverageSlackify?.projectName ||
       this.defaultOpts?.projectName ||
       packageConfig?.name;
 

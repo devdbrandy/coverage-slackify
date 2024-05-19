@@ -28,9 +28,8 @@ export class CoverageParser {
       threshold: this.coverageOpts.threshold,
     };
 
-    coverage.coveragePercentage = this.calcCoveragePercentage(coverage);
-    coverage.success =
-      this.coverageOpts.threshold <= coverage.coveragePercentage;
+    coverage.totalCoverage = this.calcCoveragePercentage(coverage);
+    coverage.success = this.coverageOpts.threshold <= coverage.totalCoverage;
     return coverage;
   }
 

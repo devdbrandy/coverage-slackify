@@ -9,18 +9,18 @@ export class SlackNotifier {
   private readonly client: SlackNotifyClient;
   private readonly config: SlackNotifierConfig;
 
-  constructor(slackWebhookUrl: string | undefined) {
-    if (!slackWebhookUrl) {
+  constructor(webhookUrl: string | undefined) {
+    if (!webhookUrl) {
       throw new Error('Slack webhook url is required');
     }
 
     this.config = {
       thresholdOpts: {
-        pass: { text: 'passed', color: '#36a64f', icon: ':thumbsup:' },
-        fail: { text: 'failed', color: '#dc5547', icon: ':thumbsdown:' },
+        pass: { text: 'passed', color: '#36a64f', icon: ':white_check_mark:' },
+        fail: { text: 'failed', color: '#dc5547', icon: ':x:' },
       },
     };
-    this.client = SlackNotify(slackWebhookUrl);
+    this.client = SlackNotify(webhookUrl);
   }
 
   getThresholdConfig(status: StatusType) {
@@ -29,7 +29,7 @@ export class SlackNotifier {
 
   buildCoverageBlock(dto: ReportDto) {
     if (!dto.coverage) {
-      throw new Error('No coverage and/or build data provided');
+      throw new Error('No coverage or build data provided');
     }
 
     const { coverage, commitInfo } = dto;
@@ -41,16 +41,16 @@ export class SlackNotifier {
       attachments: [
         {
           color: threshold.color,
-          title: `${dto.projectName} - coverage check ${threshold.text}`,
-          fallback: `${dto.projectName} - coverage check ${threshold.text} at ${coverage.coveragePercentage}%`,
+          title: `${dto.projectName} - coverage check ${threshold.text} ${threshold.icon}`,
+          fallback: `${dto.projectName} - coverage check ${threshold.text} at ${coverage.totalCoverage}%`,
           fields: [
             {
               title: 'Total Coverage',
-              value: `${coverage.coveragePercentage}%`,
+              value: `${coverage.totalCoverage}%`,
               short: true,
             },
             {
-              title: 'Threshold',
+              title: 'Threshold :dart:',
               value: `${coverage.threshold}%`,
               short: true,
             },
