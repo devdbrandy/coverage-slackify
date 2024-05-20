@@ -1,13 +1,15 @@
 import { StatusType } from './status.type';
 
 export type SlackNotifierConfig = {
-  thresholdOpts: SlackOptionResult;
+  coverageStatus: SlackCoverageStatus;
 };
 
-export type SlackOptionResult = {
-  [key in StatusType]: {
-    text: string;
-    color: string;
-    icon: string;
-  };
+export type SlackCoverageStatus = {
+  [key in StatusType]: CoverageStatus;
+};
+
+export type CoverageStatus = {
+  text: string;
+  color: string;
+  icon: string;
 };

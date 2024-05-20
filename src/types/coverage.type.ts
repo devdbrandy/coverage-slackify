@@ -4,7 +4,7 @@ export type Coverage = {
   lines: number;
   statements: number;
   threshold: number;
-  totalCoverage?: number;
+  totalCoverage: number;
   success?: boolean;
 };
 

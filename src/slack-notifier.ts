@@ -1,12 +1,12 @@
-import SlackNotify, { SlackNotify as SlackNotifyClient } from 'slack-notify';
+import SlackNotify, { SlackNotify as SlackClient } from 'slack-notify';
+import { SlackPayload } from './slack-payload';
 
-import { CommitInfo } from './types/git-info.type';
 import { ReportDto } from './types/report-dto.type';
 import { SlackNotifierConfig } from './types/slack.type';
 import { StatusType } from './types/status.type';
 
 export class SlackNotifier {
-  private readonly client: SlackNotifyClient;
+  private readonly client: SlackClient;
   private readonly config: SlackNotifierConfig;
 
   constructor(webhookUrl: string | undefined) {
@@ -15,7 +15,7 @@ export class SlackNotifier {
     }
 
     this.config = {
-      thresholdOpts: {
+      coverageStatus: {
         pass: { text: 'passed', color: '#36a64f', icon: ':white_check_mark:' },
         fail: { text: 'failed', color: '#dc5547', icon: ':x:' },
       },
@@ -23,8 +23,8 @@ export class SlackNotifier {
     this.client = SlackNotify(webhookUrl);
   }
 
-  getThresholdConfig(status: StatusType) {
-    return this.config.thresholdOpts[status];
+  getCoverageStatus(status: StatusType) {
+    return this.config.coverageStatus[status];
   }
 
   buildCoverageBlock(dto: ReportDto) {
@@ -32,68 +32,11 @@ export class SlackNotifier {
       throw new Error('No coverage or build data provided');
     }
 
-    const { coverage, commitInfo } = dto;
-    const threshold = coverage.success
-      ? this.getThresholdConfig('pass')
-      : this.getThresholdConfig('fail');
+    const status = dto.coverage.success ? 'pass' : 'fail';
+    const coverageStatus = this.getCoverageStatus(status);
+    const slackPayload = new SlackPayload(dto, coverageStatus);
 
-    const payload = {
-      attachments: [
-        {
-          color: threshold.color,
-          title: `${dto.projectName} - coverage check ${threshold.text} ${threshold.icon}`,
-          fallback: `${dto.projectName} - coverage check ${threshold.text} at ${coverage.totalCoverage}%`,
-          fields: [
-            {
-              title: 'Total Coverage',
-              value: `${coverage.totalCoverage}%`,
-              short: true,
-            },
-            {
-              title: 'Threshold :dart:',
-              value: `${coverage.threshold}%`,
-              short: true,
-            },
-            {
-              title: 'Statements',
-              value: `${coverage.statements}%`,
-              short: true,
-            },
-            {
-              title: 'Functions / Methods',
-              value: `${coverage.functions}%`,
-              short: true,
-            },
-            {
-              title: 'Branches',
-              value: `${coverage.branches}%`,
-              short: true,
-            },
-            {
-              title: 'Lines',
-              value: `${coverage.lines}%`,
-              short: true,
-            },
-          ],
-          footer: this.getFooter(commitInfo),
-          footer_icon:
-            'https://emoji.slack-edge.com/T071CEN0CCR/robo/6fac99bd09670ff4.png',
-          ts: commitInfo?.date,
-        },
-      ],
-    };
-
-    return payload;
-  }
-
-  private getFooter(commitInfo: CommitInfo | null) {
-    const caption = 'Added by Coverage Slackify';
-    if (!commitInfo) {
-      return caption;
-    }
-
-    const commitRef = commitInfo?.refs[1] || commitInfo?.refs[0];
-    return `${caption} • ${commitInfo.author} committed ${commitInfo.shortRevision} ${commitRef}`;
+    return slackPayload.composePayload();
   }
 
   async sendNotification(payload: any) {

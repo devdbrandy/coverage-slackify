@@ -26,9 +26,10 @@ export class CoverageParser {
       lines: totalSummary.lines.pct,
       statements: totalSummary.statements.pct,
       threshold: this.coverageOpts.threshold,
+      totalCoverage: 0,
     };
 
-    coverage.totalCoverage = this.calcCoveragePercentage(coverage);
+    coverage.totalCoverage = this.calculateTotalCoverage(coverage);
     coverage.success = this.coverageOpts.threshold <= coverage.totalCoverage;
     return coverage;
   }
@@ -49,7 +50,7 @@ export class CoverageParser {
     });
   }
 
-  private calcCoveragePercentage(coverage: Coverage) {
+  private calculateTotalCoverage(coverage: Coverage) {
     const coveragePct =
       (coverage.branches +
         coverage.functions +
