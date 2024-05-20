@@ -5,15 +5,13 @@ import { IstanbulReport } from './istanbul-report';
 import { SlackNotifier } from './slack-notifier';
 import { TextNotifier } from './text-notifier';
 import { ReportDto } from './types/report-dto.type';
-import { readPackageJson } from './utils/helpers.util';
 import * as colorUtil from './utils/color.util';
 
 export class CoverageSlackifyCli {
   private opts: CliOption;
 
-  constructor() {
-    const packageJson = readPackageJson();
-    this.opts = new CliOption(packageJson);
+  constructor(options: CliOption) {
+    this.opts = options;
   }
 
   async execute() {
