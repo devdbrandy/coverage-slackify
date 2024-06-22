@@ -1,6 +1,6 @@
 import SlackNotify, { SlackNotify as SlackNotifyClient } from 'slack-notify';
-import { CommitInfo } from './types/git-info.type';
 
+import { CommitInfo } from './types/git-info.type';
 import { ReportDto } from './types/report-dto.type';
 import { SlackNotifierConfig } from './types/slack.type';
 import { StatusType } from './types/status.type';

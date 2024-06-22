@@ -1,5 +1,6 @@
 import * as istanbul from 'istanbul';
 import * as fs from 'fs';
+
 import { CoverageOptions } from './types/config.type';
 
 export class IstanbulReport {
