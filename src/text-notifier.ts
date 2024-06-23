@@ -19,7 +19,7 @@ export class TextNotifier {
     this.emojis = emojis;
   }
 
-  getEmoji(status: StatusType) {
+  private getEmoji(status: StatusType) {
     const emojis = this.emojis[status];
     return emojis[Math.floor(Math.random() * emojis.length)];
   }
@@ -29,13 +29,13 @@ export class TextNotifier {
       throw new Error('Coverage information missing');
     }
 
-    const { coveragePercentage, threshold } = data;
+    const { totalCoverage, threshold } = data;
 
     if (data.success) {
       const emoji = this.getEmoji('pass');
       console.log(
         successBold('Total Coverage:'),
-        success(`${coveragePercentage}%`),
+        success(`${totalCoverage}%`),
         successBold('\tRequired Coverage:'),
         success(`${threshold}%`)
       );
@@ -47,7 +47,7 @@ export class TextNotifier {
       const emoji = this.getEmoji('fail');
       console.log(
         infoBold('Total Coverage:'),
-        info(`${coveragePercentage}%`),
+        info(`${totalCoverage}%`),
         infoBold('\tRequired Coverage:'),
         info(`${threshold}%`)
       );

@@ -8,9 +8,9 @@ import {
 export class CliOption {
   private readonly opts: OptionsType;
 
-  constructor(options: PackageJsonSchema) {
+  constructor(pkg: PackageJsonSchema) {
     this.opts = Object.assign(this.defaultOpts, {});
-    this.sanitizeConfig(options);
+    this.sanitizeConfig(pkg);
   }
 
   private get defaultOpts(): OptionsType {
@@ -29,17 +29,18 @@ export class CliOption {
     };
   }
 
-  sanitizeConfig(packageConfig: PackageJsonSchema) {
+  private sanitizeConfig(pkg: PackageJsonSchema) {
+    const { coverageSlackify } = pkg;
+
     this.opts.coverage.threshold =
-      packageConfig?.coverageSlackify?.threshold ||
-      this.defaultOpts?.coverage?.threshold;
+      coverageSlackify?.threshold || this.defaultOpts.coverage.threshold;
     this.opts.coverage.coverageFiles =
-      packageConfig?.coverageSlackify?.coverageFiles ||
-      this.defaultOpts?.coverage?.coverageFiles;
+      coverageSlackify?.coverageFiles ||
+      this.defaultOpts.coverage.coverageFiles;
     this.opts.projectName =
-      packageConfig?.coverageSlackify?.projectName ||
+      coverageSlackify?.projectName ||
       this.defaultOpts?.projectName ||
-      packageConfig?.name;
+      pkg?.name;
 
     this.sanitizeThreshold(this.opts.coverage.threshold);
 
